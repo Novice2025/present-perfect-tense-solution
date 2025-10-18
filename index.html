@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daby: Inglês LEGO - Dominando o Present Perfect</title>
+    <!-- 1. Tailwind CSS CDN for modern styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- 2. React CDNs -->
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <!-- 3. Babel CDN to compile JSX in the browser (essential for single-file React deployment) -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    
+    <style>
+        /* Optional: Set a default font and smooth scrolling */
+        body {
+            font-family: 'Inter', sans-serif;
+            scroll-behavior: smooth;
+        }
+        /* Custom styles for the app layout */
+        #root {
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+        }
+        /* Custom list style for the verb lesson */
+        .verb-list {
+            list-style: none;
+            padding: 0;
+        }
+        .verb-list li {
+            position: relative;
+            padding-left: 1.5em;
+            margin-bottom: 0.5em;
+        }
+        .verb-list li::before {
+            content: '✅';
+            position: absolute;
+            left: 0;
+        }
+    </style>
+</head>
+<body>
+    <div id="root">
+        <!-- React App mounts here -->
+    </div>
+
+    <!-- The React code must be placed inside a script tag with type="text/babel" -->
+    <script type="text/babel">
+        const { useState } = React;
+
+        // Data structure holding the lessons - NOW FOCUSED ON PRESENT PERFECT (Ongoing or Relevant Actions)
+        const lessons = [
+            // SCENARIO 1 & 2: Present Perfect vs. Simple Past - The "Yesterday" Test (The core contrast)
+            {
+              id: 1,
+              bp: "Eu trabalhei (hoje, com relevância).",
+              title: "Present Perfect vs. Simple Past (Relevância)",
+              variations: {
+                essential: "I have worked.",
+                polite: "I have already concluded my tasks.",
+                native: "I've gotten that done.",
+              },
+              steps: [
+                { bp: "Eu trabalhei.", literal: "I worked.", correct: "I have worked.", catch: "THE CATCH: Use o **Present Perfect** ('I have worked') quando a ação acabou de acontecer ou tem resultado **relevante AGORA**. O Passado Simples ('I worked') é usado quando a ação está totalmente desconectada do presente." },
+                { bp: "Eu trabalhei ontem.", literal: "I have worked yesterday.", correct: "I worked yesterday.", catch: "Exceção (Fácil): Marcadores de tempo específico e terminado como **yesterday, last week, 1999** sempre forçam o **Passado Simples** ('I worked')." },
+              ]
+            },
+            // SCENARIO 3: The "muito" (a lot) reinforcement in unfinished time
+            {
+              id: 2,
+              bp: "Eu trabalhei muito hoje.",
+              title: "Reforçando com 'Muito' (A Lot) em Tempo Inacabado",
+              variations: {
+                essential: "I have worked very hard today.",
+                polite: "I have dedicated a significant amount of effort today.",
+                native: "I've worked my butt off today.",
+              },
+              steps: [
+                { bp: "Eu trabalhei muito", literal: "I worked much", correct: "I have worked hard", catch: "O advérbio **'hard'** (com muito esforço) ou a expressão **'a lot'** reforçam a intensidade. Se o período de tempo (**today**) ainda não acabou, usamos **Present Perfect** ('have worked')." },
+                { bp: "hoje.", literal: "in today.", correct: "today.", catch: "O tempo 'today' é um tempo incompleto, por isso ele se conecta com o presente (Present Perfect). Se fosse 'yesterday', usaria 'worked'." },
+              ]
+            },
+            // SCENARIO 5: The "Verified" Action (Emphasis/Result)
+            {
+              id: 3,
+              bp: "Eu verifiquei o relatório.",
+              title: "Ênfase no Resultado (Eu Verifiquei)",
+              variations: {
+                essential: "I have verified the report.",
+                polite: "I have already completed the verification of the document.",
+                native: "I've checked the report.",
+              },
+              steps: [
+                { bp: "Eu verifiquei", literal: "I verified", correct: "I have verified", catch: "THE CATCH: O falante nativo usa **Present Perfect** quando o foco está no **resultado** (o relatório está verificado) e na **importância dessa ação AGORA**." },
+                { bp: "o relatório.", literal: "the report.", correct: "the report.", catch: "O Passado Simples seria 'I verified the report an hour ago' (com tempo específico)." },
+              ]
+            },
+            // SCENARIO 8: Already/Before (Experience)
+            {
+              id: 4,
+              bp: "Já vi esse filme antes.",
+              title: "Experiência de Vida (Usando 'Already' e 'Before')",
+              variations: {
+                essential: "I have already seen this movie.",
+                polite: "I have viewed this film on a previous occasion.",
+                native: "Yeah, I've seen this one.",
+              },
+              steps: [
+                { bp: "Já vi", literal: "Already I saw", correct: "I have already seen", catch: "A palavra **'Já'** (Already/Ever) é um grande indicador de **Present Perfect**. Use o verbo auxiliar **'have'** e a Terceira Coluna do Verbo (Particípio Passado): **seen**." },
+                { bp: "esse filme antes.", literal: "this movie before.", correct: "this movie before.", catch: "Você pode trocar 'already' por 'before' no final da frase: 'I have seen this movie before'." },
+              ]
+            },
+            // SCENARIO 10: Job History (Current/Relevant vs. Finished)
+            {
+              id: 5,
+              bp: "Eu trabalhei no Google.",
+              title: "Trabalho ou Carreira (Relevância Atual)",
+              variations: {
+                essential: "I have worked at Google.",
+                polite: "I have experience working at Google.",
+                native: "I worked at Google.", // Nativo pode usar Past Simple, mas o PP é mais seguro para relevância
+              },
+              steps: [
+                { bp: "Eu trabalhei no Google.", literal: "I worked at Google.", correct: "I have worked at Google.", catch: "Se a experiência é relevante para a conversa **agora** (ex: entrevista), use o **Present Perfect** ('have worked'). Se você está falando de um emprego que acabou em um tempo específico e não tem relevância, pode usar o Simple Past ('I worked at Google in 2018')." },
+                { bp: "Qual a diferença?", literal: "Which the difference is?", correct: "I worked there. (Acabou e não tem a ver com o presente) vs. I have worked there. (Tenho a experiência no meu currículo AGORA).", catch: "O Passado Simples (worked) foca no FATO de ter terminado, enquanto o Present Perfect (have worked) foca na experiência que você **possui agora**." },
+              ]
+            },
+            // SCENARIO 9: Life Experience (Questions)
+            {
+              id: 6,
+              bp: "Você já conheceu George?",
+              title: "Perguntando Sobre Experiências de Vida (Ever)",
+              variations: {
+                essential: "Have you ever met George?",
+                polite: "Have you had the opportunity to meet George?",
+                native: "Ya ever met George?",
+              },
+              steps: [
+                { bp: "Você já", literal: "Did you already", correct: "Have you ever", catch: "O **'Já'** em perguntas de experiência de vida (no passado, mas relevante até hoje) é traduzido como **'ever'**. E a pergunta começa com o auxiliar **'Have'**." },
+                { bp: "conheceu George?", literal: "met George?", correct: "met George?", catch: "Use a Terceira Coluna: **'met'** (conheceu/encontrou), que é o particípio passado de 'meet'. Nunca use 'Did you ever meet?'" },
+              ]
+            },
+            // SCENARIO 6: The "Como era?" Exception (Simple Past State)
+            {
+              id: 7,
+              bp: "Como era o evento?",
+              title: "Exceção: Pergunta sobre Descrição/Estado (Passado Simples)",
+              variations: {
+                essential: "What was the event like?",
+                polite: "Could you please describe the nature of the event?",
+                native: "How was the event?",
+              },
+              steps: [
+                { bp: "Como era?", literal: "How was it?", correct: "What was it like?", catch: "Para perguntar sobre **descrição, características ou estado** de algo que acabou (**o evento**), usamos o Simple Past do To Be: **'What was it like?'**. Simplesmente 'How was it?' também é correto e muito comum." },
+                { bp: "use 'it' no final", literal: "use 'it' at the end.", correct: "What was THE EVENT like?", catch: "Sim! Se você usa 'What was... **like**?', você precisa de um substantivo (the event) ou pronome (it). 'What was it like?' é perfeito." },
+              ]
+            },
+            // SCENARIO 7 & 8: Residency Contrast (Simple Past vs. Present Perfect Continuous)
+            {
+              id: 8,
+              bp: "Eu moro no trabalho há 13 anos.",
+              title: "Ação que Continua: Morar (PPC)",
+              variations: {
+                essential: "I have been living at work for 13 years.",
+                polite: "I have been residing at my place of work for 13 years.",
+                native: "Been living at work for 13 years now.",
+              },
+              steps: [
+                { bp: "Eu moro há 13 anos", literal: "I live for 13 years.", correct: "I have been living for 13 years", catch: "THE CATCH: Ação que **começou no passado e continua até hoje** usa **Present Perfect Continuous** ('have been living'). O 'live' (morar) no presente simples em inglês implica que você *sempre* morou lá." },
+                { bp: "no trabalho há 13 anos", literal: "at work since 13 years.", correct: "at work for 13 years.", catch: "**'For'** = Duração (por 13 anos). **'Since'** = Ponto de partida (desde 2010)." },
+                { bp: "Passado Simples (cenário 7)", literal: "I lived at work for 13 years.", correct: "I lived at work for 13 years. (Eu não moro mais lá.)", catch: "Se a ação terminou, use Simple Past ('I lived'). Se ela continua (e a frase em português está no presente 'Eu moro'), use PPC!" },
+              ]
+            },
+            // SCENARIO 4: Started to do something and still going
+            {
+              id: 9,
+              bp: "Comecei a fazer algo (e continuo).",
+              title: "Ação Progressiva em Andamento (Present Perfect Continuous)",
+              variations: {
+                essential: "I have been working on this project.",
+                polite: "I have been dedicating my time to this project since its inception.",
+                native: "Been working on this project.",
+              },
+              steps: [
+                { bp: "Comecei a trabalhar", literal: "I started to work", correct: "I have been working", catch: "A ênfase é na **atividade** e no **progresso**. Use **Have been + [Verbo no -ing]**. Isso é mais natural que o Present Perfect Simples ('I have worked') quando a ação está em andamento." },
+                { bp: "em um projeto.", literal: "in a project.", correct: "on a project.", catch: "Para projetos, é comum usar a preposição **'on'**." },
+              ]
+            },
+            // SCENARIO 13: 10 Common Work Verbs (PPC Practice)
+            {
+              id: 10,
+              bp: "O que você tem feito no trabalho ultimamente?",
+              title: "PPC: Ênfase na Duração e Atividade (Verbos de Trabalho)",
+              variations: {
+                essential: "I have been coordinating the new team.",
+                polite: "I have been actively coordinating the new team and managing resources.",
+                native: "I've been running the new team.",
+              },
+              steps: [
+                { bp: "O que você tem feito?", literal: "What you have done?", correct: "What have you been doing lately?", catch: "Essa é a pergunta clássica do PPC. Ela pergunta sobre atividades **contínuas** até o presente. Responda com 'I have been [verb]-ing...'" },
+                { bp: "10 Verbos de Trabalho (PPC)", literal: "Lista para prática.", correct: "Pratique com estas ações contínuas no trabalho:", catch: "Lembre-se: **'Have been + V-ing'** é a fórmula!" },
+                { bp: "Lista de Verbos Comuns (PPC)", literal: "-", correct: `
+                                <ul class="verb-list text-left space-y-2 mt-4 text-sm">
+                                    <li>**I have been coordinating** the meetings. (coordenando)</li>
+                                    <li>**I have been negotiating** the contracts. (negociando)</li>
+                                    <li>**I have been implementing** a new system. (implementando)</li>
+                                    <li>**I have been researching** the market. (pesquisando)</li>
+                                    <li>**I have been developing** a new product. (desenvolvendo)</li>
+                                    <li>**I have been managing** the budget. (gerenciando)</li>
+                                    <li>**I have been training** the new hires. (treinando)</li>
+                                    <li>**I have been analyzing** the data. (analisando)</li>
+                                    <li>**I have been designing** the UI/UX. (desenhando/projetando)</li>
+                                    <li>**I have been communicating** with the clients. (comunicando)</li>
+                                </ul>
+                            `, catch: "Todos esses verbos descrevem atividades que você **começou** no passado e que ainda estão **em progresso** ou acabaram de terminar, mas têm relevância total agora. Use sempre o PPC." },
+              ]
+            },
+            // SCENARIO 11 & 12: Advanced Contrast
+            {
+              id: 11,
+              bp: "Eu tinha falado / Eu tenho falado.",
+              title: "Passado Perfeito (Had) vs. Present Perfect (Have)",
+              variations: {
+                essential: "I have spoken / I had spoken.",
+                polite: "I have communicated this / I had communicated this prior.",
+                native: "I've said it / I'd already said it.",
+              },
+              steps: [
+                { bp: "Eu tenho falado.", literal: "I am talking.", correct: "I have spoken.", catch: "O **Present Perfect** ('I have spoken') é uma ação terminada que tem consequência AGORA, ou ocorreu em tempo inespecífico." },
+                { bp: "Eu tinha falado.", literal: "I had spoke.", correct: "I had spoken.", catch: "THE CATCH (Passado do Passado): O **Past Perfect** ('I had spoken') é usado para falar de uma ação que ocorreu **antes de outra ação no passado**. Ex: 'I had spoken to her *before* the meeting started.'" },
+                { bp: "Eu tenho falado (PPC)", literal: "I'm talking.", correct: "I have been speaking.", catch: "Para dizer que você **tem falado** *continuamente* (o ato de falar tem se repetido), use **Present Perfect Continuous** ('I have been speaking')." },
+              ]
+            },
+        ];
+
+
+        // VariationButton component
+        const VariationButton = ({ label, selected, onClick, isDarkMode }) => (
+          <button
+            onClick={onClick}
+            className={`px-4 py-2 text-sm font-semibold rounded-full transition-all duration-200 ${
+              selected
+                ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-500/50'
+                : isDarkMode
+                  ? 'bg-indigo-800/50 text-indigo-300 hover:bg-indigo-700/70'
+                  : 'bg-indigo-100 text-indigo-700 hover:bg-indigo-200'
+            }`}
+          >
+            {label}
+          </button>
+        );
+
+        // Main App component
+        const App = () => {
+          // Start on the first lesson by default, as it's the core contrast
+          const [selectedLessonId, setSelectedLessonId] = useState(lessons[0].id);
+          const [selectedVariation, setSelectedVariation] = useState('essential');
+          // Start in dark mode by default
+          const [darkMode, setDarkMode] = useState(true); 
+          const selectedLesson = lessons.find(l => l.id === selectedLessonId);
+
+          const toggleDarkMode = () => setDarkMode(prev => !prev);
+
+          // Define base colors based on mode
+          const bgColor = darkMode ? 'bg-slate-900' : 'bg-gray-50';
+          const cardColor = darkMode ? 'bg-slate-800' : 'bg-white';
+          const primaryTextColor = darkMode ? 'text-gray-100' : 'text-gray-900';
+          const secondaryTextColor = darkMode ? 'text-green-400' : 'text-green-600'; /* Changed color emphasis to green */
+          const cardShadow = darkMode ? 'shadow-2xl shadow-slate-700/50' : 'shadow-xl';
+          const borderColor = darkMode ? 'border-slate-700' : 'border-indigo-100';
+
+          if (!selectedLesson) {
+            return <div className="p-8 text-center text-red-500">Lição não encontrada.</div>;
+          }
+
+          // Function to render content safely, including HTML for the verb list
+          const renderContent = (content) => {
+              if (typeof content === 'string' && content.includes('<ul class="verb-list')) {
+                  return <div dangerouslySetInnerHTML={{ __html: content }} />;
+              }
+              return <p className="font-bold text-green-700 text-lg">{content}</p>;
+          };
+
+
+          return (
+            <div className={`min-h-screen font-sans p-4 sm:p-8 ${bgColor} ${primaryTextColor} w-full`}>
+              <header className="mb-8 text-center relative">
+                {/* Dark Mode Toggle Button */}
+                <button
+                    onClick={toggleDarkMode}
+                    className={`absolute top-0 right-0 p-2 rounded-full transition-colors duration-300 ${
+                        darkMode ? 'bg-indigo-600 text-white hover:bg-indigo-500' : 'bg-indigo-100 text-indigo-700 hover:bg-indigo-200'
+                    }`}
+                    aria-label="Toggle Dark Mode"
+                >
+                    {darkMode ? 
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" viewBox="0 0 20 20" fill="currentColor"><path d="M17.293 13.513A10 10 0 0110 20V0c5.523 0 10 4.477 10 10 0 1.574-.36 3.064-1.026 4.398l-1.681-1.681zM10 18a8 8 0 100-16 8 8 0 000 16z" clipRule="evenodd" /></svg>
+                        :
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" viewBox="0 0 20 20" fill="currentColor"><path fillRule="evenodd" d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.969 5.836a1 1 0 01-1.748 0L9.293 16a1 1 0 00-1.414 0l-.678.678a1 1 0 01-1.748 0 1 1 0 01-.168-.168l-3.232-3.232a1 1 0 011.414-1.414l3.232 3.232a1 1 0 001.414 0l.678-.678a1 1 0 011.748 0L14.707 16a1 1 0 01-1.414 1.414l-3.232-3.232a1 1 0 01-.168-.168z" clipRule="evenodd" /></svg>
+                    }
+                </button>
+
+                <h1 className={`text-3xl sm:text-4xl font-extrabold leading-tight ${primaryTextColor}`}>
+                  🤖 Daby: Inglês Lego para Brasileiros
+                </h1>
+                <p className={`mt-2 text-lg ${secondaryTextColor}`}>
+                  Foco: Dominando o **Present Perfect** e o **Passado Contínuo**!
+                  <br />
+                  <span className={`text-base font-normal ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                    (Não importa se a ação terminou ou não terminou)
+                  </span>
+                </p>
+                
+              </header>
+
+              {/* Selector and Main Content Grid */}
+              <div className="flex flex-col lg:flex-row gap-8 max-w-7xl mx-auto">
+                
+                {/* Sidebar: Lesson Selector */}
+                <div className={`lg:w-1/3 p-6 rounded-xl ${cardColor} ${cardShadow} h-fit border ${borderColor}`}>
+                  <h2 className={`text-xl font-bold mb-4 ${secondaryTextColor}`}>Selecione uma Frase (BP)</h2>
+                  <div className="space-y-2">
+                    {lessons.map(lesson => (
+                      <button
+                        key={lesson.id}
+                        onClick={() => {
+                          setSelectedLessonId(lesson.id);
+                          setSelectedVariation('essential');
+                        }}
+                        className={`w-full text-left p-3 rounded-lg transition-all duration-200 font-medium ${
+                          lesson.id === selectedLessonId
+                            ? 'bg-indigo-500 text-white shadow-md'
+                            : darkMode
+                              ? 'bg-slate-700 text-gray-300 hover:bg-slate-600'
+                              : 'bg-gray-100 text-gray-700 hover:bg-indigo-50 hover:text-indigo-600'
+                        }`}
+                      >
+                        {lesson.bp}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Main Lesson Content */}
+                <div className="lg:w-2/3 space-y-8">
+
+                  {/* Current Lesson Title */}
+                  <div className={`p-6 rounded-xl ${cardColor} ${cardShadow} border-l-4 border-green-600`}>
+                    <p className="text-xl font-light text-gray-500 mb-1">Frase Selecionada (Foco no Presente):</p>
+                    <h2 className={`text-3xl font-extrabold ${primaryTextColor}`}>{selectedLesson.bp}</h2>
+                    <p className={`mt-2 font-semibold ${secondaryTextColor}`}>{selectedLesson.title}</p>
+                  </div>
+
+                  {/* Lego Breakdown Section */}
+                  <div className={`p-6 rounded-xl ${cardColor} ${cardShadow}`}>
+                    <h3 className={`text-2xl font-bold mb-4 ${primaryTextColor} border-b pb-2`}>🧱 Método LEGO: Desmontando e Construindo</h3>
+                    <div className="space-y-6">
+                      {selectedLesson.steps.map((step, index) => (
+                        <div key={index} className={`border p-4 rounded-lg ${darkMode ? 'border-slate-700 bg-slate-700/50' : 'border-gray-200 bg-green-50/50'}`}>
+                          <p className="text-sm font-semibold text-gray-500 mb-2">Bloco {index + 1}</p>
+                          
+                          <div className="grid grid-cols-3 gap-3 mb-3">
+                            {/* BP Block */}
+                            <div className="text-center p-2 rounded-lg bg-pink-100 border border-pink-300">
+                              <p className="font-bold text-pink-700 text-lg">{step.bp}</p>
+                              <p className="text-xs text-pink-500">PORTUGUÊS (BR)</p>
+                            </div>
+                            
+                            {/* Literal/Incorrect Block */}
+                            <div className="text-center p-2 rounded-lg bg-red-100 border border-red-300">
+                              <p className="font-bold text-red-700 text-lg">{step.literal}</p>
+                              <p className="text-xs text-red-500">TRADUÇÃO LITERAL (INCORRETA)</p>
+                            </div>
+                            
+                            {/* Correct Block */}
+                            <div className="text-center p-2 rounded-lg bg-green-100 border border-green-300">
+                              {renderContent(step.correct)}
+                              <p className="text-xs text-green-500">BLOCO LEGO (CORRETO)</p>
+                            </div>
+                          </div>
+
+                          <div className={`mt-3 p-3 rounded-lg border ${darkMode ? 'bg-slate-700 border-green-600' : 'bg-white border-green-300'}`}>
+                            <p className="font-extrabold text-green-500">🚨 O CATCH / O ERRO ANTECIPADO:</p>
+                            <p className={`text-sm ${darkMode ? 'text-gray-200' : 'text-gray-700'} mt-1`}>{step.catch}</p>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Variation Section */}
+                  <div className={`p-6 rounded-xl ${cardColor} ${cardShadow}`}>
+                    <h3 className={`text-2xl font-bold mb-4 ${primaryTextColor} border-b pb-2`}>🗣️ Versões para o Mundo Real</h3>
+                    <div className="flex flex-wrap gap-3 mb-6">
+                      <VariationButton 
+                        label="BÁSICO/ESSENCIAL" 
+                        selected={selectedVariation === 'essential'}
+                        onClick={() => setSelectedVariation('essential')}
+                        isDarkMode={darkMode}
+                      />
+                      <VariationButton 
+                        label="EDUCADO (Polite)" 
+                        selected={selectedVariation === 'polite'}
+                        onClick={() => setSelectedVariation('polite')}
+                        isDarkMode={darkMode}
+                      />
+                      <VariationButton 
+                        label="NATIVO (Native/Casual)" 
+                        selected={selectedVariation === 'native'}
+                        onClick={() => setSelectedVariation('native')}
+                        isDarkMode={darkMode}
+                      />
+                    </div>
+                    
+                    <div className={`p-4 sm:p-6 rounded-lg border-l-4 ${darkMode ? 'bg-slate-700 border-green-500' : 'bg-green-50 border-green-500'}`}>
+                      <p className={`text-sm font-medium mb-1 ${secondaryTextColor}`}>
+                        Versão Selecionada: <span className="uppercase">{selectedVariation}</span>
+                      </p>
+                      <p className={`text-2xl font-extrabold ${primaryTextColor} break-words`}>
+                        {selectedLesson.variations[selectedVariation]}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          );
+        };
+        
+        // Render the App component using the React root API
+        const container = document.getElementById('root');
+        const root = ReactDOM.createRoot(container);
+        root.render(<App />);
+    </script>
+</body>
+</html>
